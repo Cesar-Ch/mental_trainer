@@ -1,19 +1,20 @@
 <script>
-  let { onstart = () => {} } = $props()
+  let { onstart = () => {} } = $props();
 
   const topics = [
-    { id: 'mult', icon: '✕', name: 'Multiplicaciones', soon: false },
-    { id: 'periodic', icon: 'Li', name: 'Tabla periódica', soon: true },
-    { id: 'roots', icon: '√', name: 'Raíces', soon: true },
-  ]
+    { id: "mult", icon: "✕", name: "Multiplicaciones", soon: false },
+    { id: "periodic", icon: "Li", name: "Tabla periódica", soon: false },
+    { id: "roots", icon: "√", name: "Raíces", soon: false },
+    { id: "integrals", icon: "∫", name: "Integrales", soon: true },
+  ];
 
-  const times = [10, 20, 30, 45, 60]
+  const times = [10, 20, 30, 45, 60];
 
-  let selectedTopic = $state('mult')
-  let selectedSecs = $state(20)
+  let selectedTopic = $state("mult");
+  let selectedSecs = $state(20);
 
   function start() {
-    onstart({ topic: selectedTopic, secs: selectedSecs })
+    onstart({ topic: selectedTopic, secs: selectedSecs });
   }
 </script>
 
@@ -28,7 +29,7 @@
         class:selected={selectedTopic === topic.id}
         class:disabled={topic.soon}
         disabled={topic.soon}
-        onclick={() => selectedTopic = topic.id}
+        onclick={() => (selectedTopic = topic.id)}
       >
         {#if topic.soon}<span class="soon-badge">próximo</span>{/if}
         <span class="topic-icon">{topic.icon}</span>
@@ -44,7 +45,7 @@
         <button
           class="time-pill"
           class:selected={selectedSecs === t}
-          onclick={() => selectedSecs = t}
+          onclick={() => (selectedSecs = t)}
         >
           {t}s
         </button>
@@ -52,9 +53,7 @@
     </div>
   </div>
 
-  <button class="btn-start" onclick={start}>
-    Empezar práctica →
-  </button>
+  <button class="btn-start" onclick={start}> Empezar práctica → </button>
 </div>
 
 <style>
@@ -85,11 +84,13 @@
     line-height: 1.2;
   }
 
-  .accent { color: #E24B4A; }
+  .accent {
+    color: #e24b4a;
+  }
 
   .topics-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     width: 100%;
   }
@@ -105,20 +106,37 @@
     cursor: pointer;
     background: white;
     position: relative;
-    transition: border-color 0.15s, background 0.15s;
+    transition:
+      border-color 0.15s,
+      background 0.15s;
     font-family: inherit;
   }
 
-  .topic-card:hover:not(.disabled) { border-color: #aaa; background: #f9f9f9; }
-  .topic-card.selected { border: 1.5px solid #E24B4A; }
-  .topic-card.disabled { opacity: 0.4; cursor: not-allowed; }
+  .topic-card:hover:not(.disabled) {
+    border-color: #aaa;
+    background: #f9f9f9;
+  }
+  .topic-card.selected {
+    border: 1.5px solid #e24b4a;
+  }
+  .topic-card.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 
-  .topic-icon { font-size: 22px; }
-  .topic-name { font-size: 12px; font-weight: 600; text-align: center; }
+  .topic-icon {
+    font-size: 22px;
+  }
+  .topic-name {
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+  }
 
   .soon-badge {
     position: absolute;
-    top: 6px; right: 6px;
+    top: 6px;
+    right: 6px;
     font-size: 9px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -128,7 +146,9 @@
     border-radius: 99px;
   }
 
-  .time-section { width: 100%; }
+  .time-section {
+    width: 100%;
+  }
 
   .section-label {
     font-size: 11px;
@@ -139,7 +159,11 @@
     margin-bottom: 10px;
   }
 
-  .time-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .time-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
 
   .time-pill {
     padding: 6px 14px;
@@ -153,23 +177,36 @@
     transition: all 0.12s;
   }
 
-  .time-pill:hover { background: #f5f5f5; border-color: #aaa; }
-  .time-pill.selected { background: #E24B4A; border-color: #E24B4A; color: white; }
+  .time-pill:hover {
+    background: #f5f5f5;
+    border-color: #aaa;
+  }
+  .time-pill.selected {
+    background: #e24b4a;
+    border-color: #e24b4a;
+    color: white;
+  }
 
   .btn-start {
     width: 100%;
     padding: 14px;
     border-radius: 12px;
     border: none;
-    background: #E24B4A;
+    background: #e24b4a;
     color: white;
     font-family: inherit;
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
-    transition: opacity 0.15s, transform 0.1s;
+    transition:
+      opacity 0.15s,
+      transform 0.1s;
   }
 
-  .btn-start:hover { opacity: 0.88; }
-  .btn-start:active { transform: scale(0.98); }
+  .btn-start:hover {
+    opacity: 0.88;
+  }
+  .btn-start:active {
+    transform: scale(0.98);
+  }
 </style>
