@@ -1,7 +1,7 @@
 <script>
   import { onDestroy } from "svelte";
 
-  let { secs = 20, onreveal = () => {} } = $props();
+  let { secs = 20, onreveal = () => {}, onnext = () => {} } = $props();
 
   const CIRCUMFERENCE = 251.2;
 
@@ -30,7 +30,10 @@
   }
 
   function handleClick() {
-    if (revealed) return;
+    if (revealed) {
+      onnext();
+      return;
+    }
     clearInterval(interval);
     revealed = true;
     onreveal();
@@ -45,7 +48,7 @@
   start();
 </script>
 
-<button class="wrapper" onclick={handleClick} disabled={revealed}>
+<button class="wrapper" onclick={handleClick}>
   <svg class="ring" width="88" height="88" viewBox="0 0 88 88">
     <circle class="track" cx="44" cy="44" r="40" />
     <circle
@@ -62,7 +65,7 @@
   </svg>
   <div class="inner">
     {#if revealed}
-      <span class="check">✓</span>
+      <span class="check">→</span>
     {:else}
       <span class="seconds">{timeLeft}</span>
       <span class="hint">ver resp.</span>

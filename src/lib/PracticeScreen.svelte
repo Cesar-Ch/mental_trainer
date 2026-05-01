@@ -112,6 +112,11 @@
     nextTimeout = setTimeout(() => nextQuestion(), 5000);
   }
 
+  function handleNext() {
+    clearTimeout(nextTimeout);
+    nextQuestion();
+  }
+
   function nextQuestion() {
     clearTimeout(nextTimeout);
     genQuestion();
@@ -155,6 +160,7 @@
     bind:this={timerBtn}
     secs={config.secs}
     onreveal={handleReveal}
+    onnext={handleNext}
   />
 
   <div class="answer" class:visible={answer !== null}>
@@ -221,7 +227,6 @@
     line-height: 1;
   }
 
-  /* elemento periódico */
   .element-card {
     display: flex;
     flex-direction: column;
@@ -241,12 +246,10 @@
     line-height: 1;
   }
 
-  /* raíces */
   .math-question {
     font-size: 1.2rem;
   }
 
-  /* respuesta */
   .answer {
     font-size: 32px;
     font-weight: 700;
