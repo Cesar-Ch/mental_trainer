@@ -1,46 +1,48 @@
 <script>
-  import { onDestroy } from 'svelte'
+  import { onDestroy } from "svelte";
 
-  let { secs = 20, onreveal = () => {} } = $props()
+  let { secs = 20, onreveal = () => {} } = $props();
 
-  const CIRCUMFERENCE = 251.2
+  const CIRCUMFERENCE = 251.2;
 
-  let timeLeft = $state(secs)
-  let revealed = $state(false)
-  let interval = null
+  let timeLeft = $state(0);
+  let revealed = $state(false);
+  let interval = null;
 
   function start() {
-    timeLeft = secs
-    revealed = false
+    timeLeft = secs;
+    revealed = false;
     interval = setInterval(() => {
-      timeLeft--
+      timeLeft--;
       if (timeLeft <= 0) {
-        clearInterval(interval)
-        revealed = true
-        onreveal()
+        clearInterval(interval);
+        revealed = true;
+        onreveal();
       }
-    }, 1000)
+    }, 1000);
   }
 
   export function reset() {
-    clearInterval(interval)
-    revealed = false
-    timeLeft = secs
-    start()
+    clearInterval(interval);
+    revealed = false;
+    timeLeft = secs;
+    start();
   }
 
   function handleClick() {
-    if (revealed) return
-    clearInterval(interval)
-    revealed = true
-    onreveal()
+    if (revealed) return;
+    clearInterval(interval);
+    revealed = true;
+    onreveal();
   }
 
-  let progress = $derived(revealed ? CIRCUMFERENCE : ((secs - timeLeft) / secs) * CIRCUMFERENCE)
+  let progress = $derived(
+    revealed ? CIRCUMFERENCE : ((secs - timeLeft) / secs) * CIRCUMFERENCE,
+  );
 
-  onDestroy(() => clearInterval(interval))
+  onDestroy(() => clearInterval(interval));
 
-  start()
+  start();
 </script>
 
 <button class="wrapper" onclick={handleClick} disabled={revealed}>
@@ -48,10 +50,14 @@
     <circle class="track" cx="44" cy="44" r="40" />
     <circle
       class="fill"
-      cx="44" cy="44" r="40"
+      cx="44"
+      cy="44"
+      r="40"
       stroke-dasharray={CIRCUMFERENCE}
       stroke-dashoffset={progress}
-      style="transition: stroke-dashoffset {revealed ? '0.3s ease' : '1s linear'}"
+      style="transition: stroke-dashoffset {revealed
+        ? '0.3s ease'
+        : '1s linear'}"
     />
   </svg>
   <div class="inner">
@@ -77,12 +83,17 @@
     padding: 0;
   }
 
-  .wrapper:not(:disabled) { cursor: pointer; }
-  .wrapper:disabled { cursor: default; }
+  .wrapper:not(:disabled) {
+    cursor: pointer;
+  }
+  .wrapper:disabled {
+    cursor: default;
+  }
 
   .ring {
     position: absolute;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     transform: rotate(-90deg);
   }
 
@@ -94,7 +105,7 @@
 
   .fill {
     fill: none;
-    stroke: #E24B4A;
+    stroke: #e24b4a;
     stroke-width: 4;
     stroke-linecap: round;
   }
@@ -128,7 +139,7 @@
 
   .check {
     font-size: 22px;
-    color: #E24B4A;
+    color: #e24b4a;
     font-weight: 700;
   }
 </style>

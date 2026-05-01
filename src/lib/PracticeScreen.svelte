@@ -4,6 +4,7 @@
   import MathDisplay from "./MathDisplay.svelte";
   import { elements } from "./data/elements.js";
   import { genRootQuestion } from "./data/roots.js";
+  import { integrals } from "./data/integrals.js";
 
   let { config = { topic: "mult", secs: 20 }, onback = () => {} } = $props();
 
@@ -16,6 +17,7 @@
     degree: 2,
     radicand: 0,
     result: 0,
+    integralIndex: 0,
   });
   let answer = $state(null);
   let timerBtn = $state(null);
@@ -41,6 +43,7 @@
         degree: 2,
         radicand: 0,
         result: 0,
+        integralIndex: 0,
       };
     } else if (config.topic === "periodic") {
       const el = elements[Math.floor(Math.random() * elements.length)];
@@ -52,10 +55,30 @@
         degree: 2,
         radicand: 0,
         result: 0,
+        integralIndex: 0,
       };
     } else if (config.topic === "roots") {
       const r = genRootQuestion();
-      question = { type: "roots", a: 0, b: 0, el: null, ...r };
+      question = {
+        type: "roots",
+        a: 0,
+        b: 0,
+        el: null,
+        ...r,
+        integralIndex: 0,
+      };
+    } else if (config.topic === "integrals") {
+      const idx = Math.floor(Math.random() * integrals.length);
+      question = {
+        type: "integrals",
+        a: 0,
+        b: 0,
+        el: null,
+        degree: 2,
+        radicand: 0,
+        result: 0,
+        integralIndex: idx,
+      };
     }
   }
 
@@ -73,6 +96,8 @@
       answer = `${question.el.number} — ${question.el.name}`;
     } else if (config.topic === "roots") {
       answer = `${question.result}`;
+    } else if (config.topic === "integrals") {
+      answer = integrals[question.integralIndex].answer;
     }
 
     showNextBar = true;
@@ -119,6 +144,10 @@
           expression={rootLatex(question.degree, question.radicand)}
         />
       </div>
+    {:else if question.type === "integrals"}
+      <div class="math-question">
+        <MathDisplay expression={integrals[question.integralIndex].question} />
+      </div>
     {/if}
   </div>
 
@@ -129,7 +158,11 @@
   />
 
   <div class="answer" class:visible={answer !== null}>
-    {answer ?? ""}
+    {#if answer !== null && config.topic === "integrals"}
+      <MathDisplay expression={answer} />
+    {:else}
+      {answer ?? ""}
+    {/if}
   </div>
 
   <div class="next-label">
@@ -199,12 +232,6 @@
     border: 2px solid #e24b4a;
     border-radius: 16px;
     gap: 4px;
-  }
-
-  .element-number {
-    font-size: 14px;
-    color: #999;
-    font-weight: 600;
   }
 
   .element-symbol {

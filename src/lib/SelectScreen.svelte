@@ -5,7 +5,7 @@
     { id: "mult", icon: "✕", name: "Multiplicaciones", soon: false },
     { id: "periodic", icon: "Li", name: "Tabla periódica", soon: false },
     { id: "roots", icon: "√", name: "Raíces", soon: false },
-    { id: "integrals", icon: "∫", name: "Integrales", soon: true },
+    { id: "integrals", icon: "∫", name: "Integrales", soon: false },
   ];
 
   const times = [10, 20, 30, 45, 60];
