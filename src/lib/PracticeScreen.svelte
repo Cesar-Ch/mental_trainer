@@ -1,32 +1,41 @@
-<script>
+<script lang="ts">
   import { onDestroy } from "svelte";
   import TimerButton from "./TimerButton.svelte";
   import MathDisplay from "./MathDisplay.svelte";
   import { elements } from "./data/elements.js";
   import { genRootQuestion } from "./data/roots.js";
   import { integrals } from "./data/integrals.js";
+  import { genWordQuestion } from './data/words.js'
 
   let { config = { topic: "mult", secs: 20 }, onback = () => {} } = $props();
 
-  // estado de la pregunta
+  /* 
+    Estado de la pregunta
+  */
   let question = $state({
     type: "",
     a: 0,
     b: 0,
-    el: null,
+    el: null as any,
     degree: 2,
     radicand: 0,
     result: 0,
     integralIndex: 0,
+    wordNumber: 0 as number,
+    wordText: "" as string,
+    wordDirection: "" as string,
   });
-  let answer = $state(null);
-  let timerBtn = $state(null);
-  let nextTimeout = null;
+
+  let answer = $state<string | null>(null);
+  let timerBtn = $state<any>(null);
+  let nextTimeout: ReturnType<typeof setTimeout> | null = null;
   let showNextBar = $state(false);
   let nextBarWidth = $state(0);
   let nextCountdown = $state(5);
 
-  // --- generadores ---
+  /* 
+    Generadores
+  */
   function genQuestion() {
     answer = null;
     showNextBar = false;
@@ -44,6 +53,9 @@
         radicand: 0,
         result: 0,
         integralIndex: 0,
+        wordNumber: 0,
+        wordText: "",
+        wordDirection: "",
       };
     } else if (config.topic === "periodic") {
       const el = elements[Math.floor(Math.random() * elements.length)];
@@ -56,6 +68,9 @@
         radicand: 0,
         result: 0,
         integralIndex: 0,
+        wordNumber: 0,
+        wordText: "",
+        wordDirection: "",
       };
     } else if (config.topic === "roots") {
       const r = genRootQuestion();
@@ -66,6 +81,9 @@
         el: null,
         ...r,
         integralIndex: 0,
+        wordNumber: 0,
+        wordText: "",
+        wordDirection: "",
       };
     } else if (config.topic === "integrals") {
       const idx = Math.floor(Math.random() * integrals.length);
@@ -78,17 +96,49 @@
         radicand: 0,
         result: 0,
         integralIndex: idx,
+        wordNumber: 0,
+        wordText: "",
+        wordDirection: "",
+      };
+    } else if (config.topic === "sums") {
+      const a = Math.floor(Math.random() * 900) + 100;
+      const b = Math.floor(Math.random() * 900) + 100;
+      question = {
+        type: "sums",
+        a,
+        b,
+        el: null,
+        degree: 2,
+        radicand: 0,
+        result: 0,
+        integralIndex: 0,
+        wordNumber: 0,
+        wordText: "",
+        wordDirection: "",
+      };
+    } else if (config.topic === "words") {
+      const w = genWordQuestion();
+      question = {
+        type: "words",
+        a: 0,
+        b: 0,
+        el: null,
+        degree: 2,
+        radicand: 0,
+        result: 0,
+        integralIndex: 0,
+        wordNumber: w.number,
+        wordText: w.word,
+        wordDirection: w.direction,
       };
     }
   }
 
-  // --- latex para raíces ---
   function rootLatex(degree, radicand) {
     if (degree === 2) return `\\sqrt{${radicand}}`;
     return `\\sqrt[${degree}]{${radicand}}`;
   }
 
-  // --- reveal ---
   function handleReveal() {
     if (config.topic === "mult") {
       answer = `${question.a * question.b}`;
@@ -98,6 +148,13 @@
       answer = `${question.result}`;
     } else if (config.topic === "integrals") {
       answer = integrals[question.integralIndex].answer;
+    } else if (config.topic === "sums") {
+      answer = `${question.a + question.b}`;
+    } else if (config.topic === "words") {
+      answer =
+        question.wordDirection === "numToWord"
+          ? question.wordText
+          : `${question.wordNumber}`;
     }
 
     showNextBar = true;
@@ -153,6 +210,14 @@
       <div class="math-question">
         <MathDisplay expression={integrals[question.integralIndex].question} />
       </div>
+    {:else if question.type === "sums"}
+      <div class="question-text">{question.a} + {question.b}</div>
+    {:else if question.type === "words"}
+      {#if question.wordDirection === "numToWord"}
+        <div class="question-text">{question.wordNumber}</div>
+      {:else}
+        <div class="word-display">{question.wordText}</div>
+      {/if}
     {/if}
   </div>
 
@@ -287,5 +352,12 @@
     height: 100%;
     background: #e24b4a;
     border-radius: 99px;
+  }
+  .word-display {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: #e24b4a;
   }
 </style>

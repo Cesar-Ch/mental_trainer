@@ -2,12 +2,13 @@
   let { onstart = () => {} } = $props();
 
   const topics = [
-    { id: "mult", icon: "✕", name: "Multiplicaciones", soon: false },
+    { id: "mult", icon: "x", name: "Multiplicaciones", soon: false },
+    { id: "sums", icon: "+", name: "Sumas", soon: false },
     { id: "periodic", icon: "Li", name: "Tabla periódica", soon: false },
     { id: "roots", icon: "√", name: "Raíces", soon: false },
+    { id: "words", icon: "?", name: "Número → Palabra", soon: false },
     { id: "integrals", icon: "∫", name: "Integrales", soon: false },
   ];
-
   const times = [10, 20, 30, 45, 60];
 
   let selectedTopic = $state("mult");
@@ -90,7 +91,7 @@
 
   .topics-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     width: 100%;
   }
